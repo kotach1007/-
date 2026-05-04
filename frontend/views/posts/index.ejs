@@ -1,0 +1,29 @@
+<%- include('../partials/header') %>
+<div class="page-header">
+    <h2>게시판</h2>
+    <% if (isAuthenticated) { %>
+        <a href="/posts/new" class="btn btn-primary">새 글 작성</a>
+    <% } %>
+</div>
+
+<% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<% if (posts.length === 0) { %>
+    <div class="empty-state">게시글이 없습니다. 첫 글을 작성해보세요!</div>
+<% } else { %>
+    <div class="post-list">
+        <% posts.forEach(post => { %>
+            <a href="/posts/<%= post.id %>" class="post-card">
+                <div class="post-card-title"><%= post.title %></div>
+                <div class="post-card-meta">
+                    <span><%= post.author_name %></span>
+                    <span>댓글 <%= post.comment_count %></span>
+                    <span><%= new Date(post.created_at).toLocaleDateString('ko-KR') %></span>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+<% } %>
+<%- include('../partials/footer') %>

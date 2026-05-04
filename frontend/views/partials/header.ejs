@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container nav-inner">
+        <a href="/posts" class="brand">커뮤니티</a>
+        <div class="nav-links">
+            <% if (isAuthenticated) { %>
+                <span class="nav-user">안녕하세요, <strong><%= user.username %></strong>님</span>
+                <a href="/posts/new" class="btn btn-primary">글쓰기</a>
+                <form action="/auth/logout" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-outline">로그아웃</button>
+                </form>
+            <% } else { %>
+                <a href="/auth/login" class="btn btn-outline">로그인</a>
+                <a href="/auth/register" class="btn btn-primary">회원가입</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
+<main class="container">

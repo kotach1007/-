@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+<div class="post-detail">
+    <div class="post-detail-header">
+        <h2><%= post.title %></h2>
+        <div class="post-detail-meta">
+            <span>작성자: <strong><%= post.author_name %></strong></span>
+            <span><%= new Date(post.created_at).toLocaleDateString('ko-KR') %></span>
+        </div>
+    </div>
+
+    <div class="post-content"><%- post.content.replace(/\n/g, '<br>') %></div>
+
+    <% if (isAuthenticated && user.username === post.author_name) { %>
+        <div class="post-actions">
+            <a href="/posts/<%= post.id %>/edit" class="btn btn-outline">수정</a>
+            <form action="/posts/<%= post.id %>/delete" method="POST" style="display:inline;"
+                  onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                <button type="submit" class="btn btn-danger">삭제</button>
+            </form>
+        </div>
+    <% } %>
+
+    <div class="comments-section">
+        <h3>댓글 <span class="comment-count"><%= post.comments.length %></span></h3>
+
+        <% if (isAuthenticated) { %>
+            <form action="/posts/<%= post.id %>/comments" method="POST" class="comment-form">
+                <textarea name="content" rows="3" placeholder="댓글을 입력하세요..." required></textarea>
+                <button type="submit" class="btn btn-primary">댓글 작성</button>
+            </form>
+        <% } else { %>
+            <p class="login-prompt"><a href="/auth/login">로그인</a>하면 댓글을 작성할 수 있습니다.</p>
+        <% } %>
+
+        <div class="comment-list">
+            <% if (post.comments.length === 0) { %>
+                <p class="empty-state">첫 댓글을 남겨보세요.</p>
+            <% } %>
+            <% post.comments.forEach(comment => { %>
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <strong><%= comment.author_name %></strong>
+                        <span class="comment-date"><%= new Date(comment.created_at).toLocaleDateString('ko-KR') %></span>
+                        <% if (isAuthenticated && user.username === comment.author_name) { %>
+                            <form action="/posts/comments/<%= comment.id %>/delete?postId=<%= post.id %>"
+                                  method="POST" style="display:inline;"
+                                  onsubmit="return confirm('댓글을 삭제하시겠습니까?')">
+                                <button type="submit" class="btn-link-danger">삭제</button>
+                            </form>
+                        <% } %>
+                    </div>
+                    <p class="comment-content"><%= comment.content %></p>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<a href="/posts" class="btn btn-outline">목록으로</a>
+<%- include('../partials/footer') %>
